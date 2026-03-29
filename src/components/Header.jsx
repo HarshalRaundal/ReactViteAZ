@@ -6,6 +6,7 @@ import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import Search from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import { CustomModal } from "./CustomModal";
+import HeaderMobile from "./Header/HeaderMobile";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,7 +26,7 @@ const Header = () => {
           className="btn-save  p-2 px-4 border rounded-md hover:bg-black hover:text-white cursor-pointer min-w-25"
           onClick={() => setModalVisible(false)}
         >
-          save
+          sign in
         </button>
       </div>
     ),
@@ -47,7 +48,8 @@ const Header = () => {
 
   return (
     <>
-      <div className="text-xs flex justify-between px-4 py-2 text-gray-500 lg:mx-12">
+      <HeaderMobile />
+      <div className="text-xs justify-between px-4 py-2 text-gray-500 lg:mx-12 hidden md:flex">
         <div>Amazons response to Covid-19</div>
         <nav className="flex gap-4">
           <div>United States</div>
@@ -57,7 +59,7 @@ const Header = () => {
           <div>Sell on Amazon</div>
         </nav>
       </div>
-      <div className="flex justify-between  items-center p-4 lg:mx-12">
+      <div className=" hidden md:flex justify-between  items-center p-4 lg:mx-12">
         <div className="flex items-center gap-4">
           <Link to="/">
             <img src={siteLogoImg} alt="site-logo" className="w-30" />

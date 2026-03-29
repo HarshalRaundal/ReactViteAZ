@@ -1,19 +1,53 @@
 import StarBorder from "@mui/icons-material/StarBorder";
 import StarHalf from "@mui/icons-material/StarHalf";
 import StarRateIcon from "@mui/icons-material/StarRate";
+import React, { useMemo } from "react";
 import carouselStyles from "../assets/styles/hero-carousel.module.css";
 import heroImg from "/assets/images/hero-product.png";
 
 const HeroUI = ({ products, currentIndex, onChange }) => {
-  const product = products[currentIndex];
-  const length = products.length;
+  if (!products || !products.length) return null;
+
+  const product = products[currentIndex] || {};
+  const length = products.length || 0;
+
+  const paginationItems = useMemo(() => {
+    return Array.from({ length });
+  }, [length]);
+  const renderStars = useMemo(() => {
+    const rating = product.rating || 0;
+
+    const fullStars = Math.floor(rating);
+    const hasHalf = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+
+    const starElements = [];
+
+    for (let i = 0; i < fullStars; i++) {
+      starElements.push(
+        <StarRateIcon key={`full-${i}`} sx={{ fontSize: 14 }} />,
+      );
+    }
+    if (hasHalf) {
+      starElements.push(<StarHalf key="half" sx={{ fontSize: 14 }} />);
+    }
+
+    for (let i = 0; i < emptyStars; i++) {
+      starElements.push(
+        <StarBorder key={`empty-${i}`} sx={{ fontSize: 14 }} />,
+      );
+    }
+
+    return starElements;
+  }, [product.rating]);
+
   return (
     <div className="bg-gray-100 rounded-xl p-4 md:py-8 md:px-0   md:pe-10 xl:pe-28 min-h-1/2 md:flex items-center justify-center">
       <div className="w-full xl:w-1/2 flex-row md:flex ">
         <div
           className={`${carouselStyles["carousel-pagination"]} md:flex md:flex-col justify-center md:justify-around items-center gap-10 md:gap-2 md:px-8 text-gray-500 hidden`}
         >
-          {new Array(length || 0).fill().map((_, index) => {
+          {paginationItems.map((_, index) => {
             return (
               <button
                 className={`${index == currentIndex ? carouselStyles.active : ""} cursor-pointer`}
@@ -35,20 +69,20 @@ const HeroUI = ({ products, currentIndex, onChange }) => {
             Shop laptops, desktops, monitors, tablets, PC, gaming, hard drives
             and storage accessories and more.
           </p>
-          <button className="border p-2 w-36 mt-3.5 rounded-xl font-normal cursor-pointer hover:bg-black hover:text-white">
+          <button className="p-2 w-36 mt-3.5 rounded-xl font-normal cursor-pointer hover:bg-black hover:text-white">
             View More
           </button>
         </div>
       </div>
       <div className=" w-full xl:w-1/2 flex md:flex-row relative min-h-60">
-        <div className="p-4 bg-orange-500 rounded-full h-16 w-16  items-center justify-between text-white absolute right-5 md:-right-10 md:top-5 lg:top-10 xl:right-60 top-5 xl:top-20 z-(--hero-discount-z-index) hidden md:flex">
+        <div className="p-4  bg-orange-500 rounded-full h-16 w-16  items-center justify-between text-white  z-(--hero-discount-z-index) hidden md:flex relative  top-20 -right-11/12 lg:top-25  lg:-right-11/12 xl:top-35  xl:-right-11/12 2xl:-right-3/4 3xl:-right-1/3">
           {product?.discount}%
         </div>
 
         <img
           src={product?.image || heroImg}
           alt="hero product image- headphones"
-          className=" absolute md:relative z-(--hero-img-z-index) w-sm sm:w-3/5 md:w-xl -top-2/5 -right-25 sm:right-0 md:-right-25 justify-self-end"
+          className="absolute md:relative z-(--hero-img-z-index) w-sm sm:w-3/5 md:w-xl -top-2/5 -right-25 sm:right-0 md:-right-25 justify-self-end"
           loading="lazy"
         />
 
@@ -58,27 +92,7 @@ const HeroUI = ({ products, currentIndex, onChange }) => {
             <h2 className="text-sm font-medium line">{product?.title}</h2>
             <p className="text-gray-500 text-xs flex justify-baseline items-baseline gap-0.5 ">
               <span className="text-yellow-500 inline-flex w-fit -space-x-0.5 lg:mt-2">
-                {new Array(Number(Math.floor(Number(product?.rating || 0))))
-                  .fill()
-                  .map((_, index) => (
-                    <StarRateIcon
-                      sx={{ fontSize: 14 }}
-                      key={`rating-fullstar-${index}`}
-                    />
-                  ))}
-
-                {(product?.rating * 10) % 10 && (
-                  <StarHalf sx={{ fontSize: 14 }} />
-                )}
-
-                {new Array(Number(5 - Math.ceil(Number(product?.rating || 0))))
-                  .fill()
-                  .map((_, index) => (
-                    <StarBorder
-                      sx={{ fontSize: 14 }}
-                      key={`rating-empty-star-${index}`}
-                    />
-                  ))}
+                {renderStars}
               </span>
               {product?.reviewsCount} reviews
             </p>
@@ -104,7 +118,7 @@ const HeroUI = ({ products, currentIndex, onChange }) => {
       <div
         className={`${carouselStyles["carousel-pagination"]} flex md:flex-col justify-center md:justify-around items-center gap-10 md:gap-2 md:px-8 text-gray-500 mt-5 md:hidden`}
       >
-        {new Array(length || 0).fill().map((_, index) => {
+        {paginationItems.map((_, index) => {
           return (
             <button
               className={`${index == currentIndex ? carouselStyles.active : ""} cursor-pointer`}
@@ -122,4 +136,4 @@ const HeroUI = ({ products, currentIndex, onChange }) => {
   );
 };
 
-export default HeroUI;
+export default React.memo(HeroUI);

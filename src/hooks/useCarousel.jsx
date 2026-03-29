@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const useCaraousel = (length, delay = 2000) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -13,8 +13,8 @@ export const useCaraousel = (length, delay = 2000) => {
     return () => clearInterval(interval);
   }, [length, delay]);
 
-  const goTo = (ind) => {
+  const goTo = useCallback((ind) => {
     setCurrentIndex(ind);
-  };
+  }, []);
   return { currentIndex, goTo };
 };

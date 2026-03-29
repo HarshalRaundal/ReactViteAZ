@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-3xl: 1921px;
+}
 :root {
   --modal-z-index: 1000;
   --hero-img-z-index: 10;

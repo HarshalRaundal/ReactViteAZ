@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { getHeroCarouselProducts } from "../utils/functions";
+import { getHeroCarouselProducts } from "../../utils/functions";
 
 export class ReactClassComponent extends Component {
   constructor() {
